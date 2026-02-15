@@ -1599,8 +1599,8 @@ let sb = null;
 
 function _initSupabaseClient(){
   try{
-    const url = (window.__SUPABASE_URL || localStorage.getItem("SUPABASE_URL") || SUPABASE_URL || "").trim();
-    const key = (window.__SUPABASE_ANON_KEY || localStorage.getItem("SUPABASE_ANON_KEY") || SUPABASE_ANON_KEY || "").trim();
+    const url = (window.__SUPABASE_URL || localStorage.getItem("SUPABASE_URL") || SUPABASE_URL || "https://dciummlrembsgcobapbl.supabase.co").trim();
+    const key = (window.__SUPABASE_ANON_KEY || localStorage.getItem("SUPABASE_ANON_KEY") || SUPABASE_ANON_KEY || "sb_publishable_cFs9-j7ZWxIFwFmtJKTK_g_i3tRHhIt").trim();
     if(url && key && window.supabase){
       sb = window.supabase.createClient(url, key);
       return true;
