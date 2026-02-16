@@ -2746,7 +2746,7 @@ function openCarsPage(){
     let calAddMode = "personal";
     const togCalMode = document.getElementById("togCalMode");
     const togCalModeV = document.getElementById("togCalModeV");
-    function renderCalToggle(){ togCalModeV.textContent = (calAddMode === "business" ? "🧑 MARCI" : "👤 SZABI"); }
+    function renderCalToggle(){ togCalModeV.textContent = (calAddMode === "business" ? "🧍‍♂️ MARCI" : "🧍 SZABI"); }
     function cycleCalMode(){ calAddMode = (calAddMode === "business") ? "personal" : "business"; renderCalToggle(); }
     togCalMode.addEventListener("click", cycleCalMode);
     renderCalToggle();
