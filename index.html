@@ -1367,7 +1367,7 @@
 </div>
 <div class="togRow">
 <button class="tog" id="togListMode" title="Kattintásra vált" type="button">
-<span class="k">terület</span><span class="v" id="togListModeV">👤 SZABI</span>
+<span class="k">terület</span><span class="v" id="togListModeV">🧍 SZABI</span>
 </button>
 <button class="tog" id="togListPrio" title="Kattintásra vált" type="button">
 <span class="k">prio</span><span class="v" id="togListPrioV">P2</span>
@@ -2486,7 +2486,7 @@ function openCarsPage(){
     const togListPrioV = document.getElementById("togListPrioV");
 
     function renderListToggles(){
-      togListModeV.textContent = (listAddMode === "business" ? "🧑 MARCI" : "👤 SZABI");
+      togListModeV.textContent = (listAddMode === "business" ? "🧍‍♂️ MARCI" : "🧍 SZABI");
       togListPrioV.textContent = listAddPrio;
       modePill.textContent = "mód: " + modeLabel(listAddMode);
     }
