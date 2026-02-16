@@ -1582,37 +1582,23 @@
 // -------------------------
 // SUPABASE CONFIG (required)
 // -------------------------
-// ----------------------
-// 1) Supabase config
-// You can hardcode these, OR provide them at runtime:
-// - window.__SUPABASE_URL / window.__SUPABASE_ANON_KEY (set in another script)
-// - or saved in localStorage (this app can prompt you if missing)
-const SUPABASE_URL = (window.__SUPABASE_URL || localStorage.getItem("SUPABASE_URL") || "https://dciummlrembsgcobapbl.supabase.co");
-const SUPABASE_ANON_KEY = (window.__SUPABASE_ANON_KEY || localStorage.getItem("SUPABASE_ANON_KEY") || "sb_publishable_cFs9-j7ZWxIFwFmtJKTK_g_i3tRHhIt");
+// 1) Add your Supabase project URL + anon key here:
+const SUPABASE_URL = "";
+const SUPABASE_ANON_KEY = "";
 
 // Supabase table name
-
 const STORE_TABLE = "carlink_store";
 
-// Create client (re-initializable)
+// Create client
 let sb = null;
-
-function _initSupabaseClient(){
-  try{
-    const url = (window.__SUPABASE_URL || localStorage.getItem("SUPABASE_URL") || SUPABASE_URL || "https://dciummlrembsgcobapbl.supabase.co").trim();
-    const key = (window.__SUPABASE_ANON_KEY || localStorage.getItem("SUPABASE_ANON_KEY") || SUPABASE_ANON_KEY || "sb_publishable_cFs9-j7ZWxIFwFmtJKTK_g_i3tRHhIt").trim();
-    if(url && key && window.supabase){
-      sb = window.supabase.createClient(url, key);
-      return true;
-    }
-  }catch(e){
-    console.error(e);
+try{
+  if(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase){
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
+}catch(e){
+  console.error(e);
   sb = null;
-  return false;
 }
-
-_initSupabaseClient();
 
 /*
   === SUPABASE SQL (run in Supabase SQL Editor) ===
@@ -1658,115 +1644,33 @@ function _setAuthMsg(msg, isErr=false){
 
 async function _ensureSupabaseReady(){
   if(sb) return true;
-
-  // Try again (in case config was injected after load)
-  if(_initSupabaseClient() && sb) return true;
-
-  // Offer an interactive setup (stores in localStorage)
-  _setAuthMsg("Supabase nincs beállítva. Kérlek add meg a project URL-t és az anon kulcsot.", true);
-
-  try{
-    const url = prompt("Supabase Project URL (pl. https://xxxx.supabase.co):", localStorage.getItem("SUPABASE_URL")||"");
-    if(!url) return false;
-    const key = prompt("Supabase Anon Key:", localStorage.getItem("SUPABASE_ANON_KEY")||"");
-    if(!key) return false;
-
-    localStorage.setItem("SUPABASE_URL", url.trim());
-    localStorage.setItem("SUPABASE_ANON_KEY", key.trim());
-
-    if(_initSupabaseClient() && sb){
-      _setAuthMsg("Supabase beállítva. Próbáld újra a belépést/regisztrációt.", false);
-      return true;
-    }
-  }catch(e){
-    console.error(e);
-  }
-
-  _setAuthMsg("Nem sikerült inicializálni a Supabase klienst. Ellenőrizd az URL-t, a kulcsot és hogy a supabase-js betölt-e.", true);
+  _setAuthMsg("Hiányzik a SUPABASE_URL / SUPABASE_ANON_KEY beállítás a fájlban.", true);
   return false;
 }
 
-
 async function doLogin(){
-  try{
-    _setAuthMsg("Belépés indítva…");
-
-    if(!await _ensureSupabaseReady()){
-      _setAuthMsg("Supabase nincs készen (URL/KEY vagy supabase-js hiányzik).", true);
-      return;
-    }
-
-    const email = (authEmail.value||"").trim();
-    const password = (authPass.value||"").trim();
-
-    if(!email || !password){
-      _setAuthMsg("Add meg az emailt és a jelszót.", true);
-      return;
-    }
-
-    _setAuthMsg("Beléptetés…");
-
-    const { data, error } = await sb.auth.signInWithPassword({ email, password });
-
-    if(error){
-      _setAuthMsg(error.message || "Hibás belépés.", true);
-      return;
-    }
-
-    _sessionUser = data.user;
-    await initAfterLogin();
-  }catch(e){
-    console.error(e);
-    _setAuthMsg("JS hiba történt belépésnél: " + (e?.message || e), true);
-    alert("Hiba: " + (e?.message || e));
-  }
+  if(!await _ensureSupabaseReady()) return;
+  const email = (authEmail.value||"").trim();
+  const password = (authPass.value||"").trim();
+  if(!email || !password){ _setAuthMsg("Add meg az emailt és a jelszót.", true); return; }
+  _setAuthMsg("Beléptetés…");
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if(error){ _setAuthMsg(error.message || "Hibás belépés.", true); return; }
+  _sessionUser = data.user;
+  await initAfterLogin();
 }
-
 
 async function doSignup(){
-  try{
-    // Visible feedback immediately so it never feels like "nothing happens"
-    _setAuthMsg("Regisztráció indítva…");
-
-    if(!await _ensureSupabaseReady()){
-      _setAuthMsg("Supabase nincs készen (URL/KEY vagy supabase-js hiányzik).", true);
-      return;
-    }
-
-    const email = (authEmail.value||"").trim();
-    const password = (authPass.value||"").trim();
-
-    if(!email || !password){
-      _setAuthMsg("Add meg az emailt és a jelszót.", true);
-      return;
-    }
-
-    _setAuthMsg("Regisztráció…");
-
-    const { data, error } = await sb.auth.signUp({ email, password });
-
-    if(error){
-      _setAuthMsg(error.message || "Sikertelen regisztráció.", true);
-      return;
-    }
-
-    // If email confirmation is OFF, we will have a session and can continue immediately.
-    if(data?.session?.user){
-      _sessionUser = data.session.user;
-      await initAfterLogin();
-      return;
-    }
-
-    // If email confirmation is ON, user must confirm before login works.
-    _setAuthMsg("Kész! Valószínű email megerősítés van bekapcsolva. Nézd meg a leveled, erősítsd meg, majd lépj be.");
-  }catch(e){
-    console.error(e);
-    _setAuthMsg("JS hiba történt regisztrációnál: " + (e?.message || e), true);
-    alert("Hiba: " + (e?.message || e));
-  }
+  if(!await _ensureSupabaseReady()) return;
+  const email = (authEmail.value||"").trim();
+  const password = (authPass.value||"").trim();
+  if(!email || !password){ _setAuthMsg("Add meg az emailt és a jelszót.", true); return; }
+  _setAuthMsg("Regisztráció…");
+  const { data, error } = await sb.auth.signUp({ email, password });
+  if(error){ _setAuthMsg(error.message || "Sikertelen regisztráció.", true); return; }
+  // If email confirmation is enabled, the user may need to confirm.
+  _setAuthMsg("Kész! Ha kapsz megerősítő emailt, erősítsd meg, majd lépj be.");
 }
-
-
 
 async function doLogout(){
   if(!sb) return;
@@ -1779,7 +1683,6 @@ async function doLogout(){
 
 btnLogin?.addEventListener("click", doLogin);
 btnSignup?.addEventListener("click", doSignup);
-_setAuthMsg("Auth UI betöltve. Ha kattintásra nem történik semmi, nyisd meg az F12 Console-t hibákért.");
 authPass?.addEventListener("keydown", (e)=>{ if(e.key==="Enter"){ e.preventDefault(); doLogin(); } });
 
 document.querySelectorAll(".logoutBtn").forEach(b => b.addEventListener("click", doLogout));
@@ -1906,7 +1809,7 @@ const LS_CAL_KEY  = "zsolt_db_tasks_calendar_v4";
 const LS_DAY_KEY  = "zsolt_db_last_day_v7";
 const LS_CARS_KEY = "zsolt_db_cars_v1";
 
-const STORE_TABLE = "carlink_store"; // one row per user: {user_id, data}
+// one row per user: {user_id, data}
 
 
 /*
