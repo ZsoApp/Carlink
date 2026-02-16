@@ -3305,7 +3305,7 @@ function openCarsPage(){
     document.getElementById("btnCalHome").addEventListener("click", ()=> show("mode"));
 
     carsFab.addEventListener("click", ()=> { diveToCars(carsFab); });
-    document.getElementById("btnListAdd").addEventListener("click", (e)=> diveToCars(e.currentTarget));
+    document.getElementById("btnListAdd").addEventListener("click", openAddPage);
 
     document.getElementById("btnListCalendar").addEventListener("click", openCalendar);
     document.getElementById("btnCalToList").addEventListener("click", ()=> { renderList(); show("list"); });
