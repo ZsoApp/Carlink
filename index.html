@@ -994,6 +994,7 @@
     .checkGrid{ margin-top: 10px; display:grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
     @media (max-width: 560px){ .checkGrid{ grid-template-columns: 1fr; } }
     .checkItem{ display:flex; align-items:center; gap: 10px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.10); background: rgba(0,0,0,0.18); padding: 10px 12px; }
+    .checkItem{ user-select:none; -webkit-user-select:none; }
     .checkItem input{ width: 18px; height: 18px; accent-color: rgba(255,255,255,0.85); }
     .checkItem span{ font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,0.78); }
     
