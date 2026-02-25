@@ -1121,6 +1121,88 @@ textarea{
   user-select: text;
   -webkit-user-select: text; 
 }
+/* =========================
+   ULTRA SOFT LIGHT OVERRIDE
+   (1 fokkal világosabb az eredetinél)
+   ========================= */
+:root{
+  /* háttér – majdnem az eredeti */
+  --bg0: #090b11 !important;
+  --bg1: #0d111a !important;
+
+  /* szöveg – leheletnyit világosabb */
+  --text: rgba(255,255,255,0.93) !important;
+  --muted: rgba(255,255,255,0.58) !important;
+  --muted2: rgba(255,255,255,0.42) !important;
+
+  /* árnyék – szinte változatlan */
+  --shadow: 0 30px 80px rgba(0,0,0,0.50) !important;
+}
+
+/* teljes oldal háttér */
+body{
+  background:
+    radial-gradient(1200px 800px at 20% 10%, rgba(160,190,255,0.07), transparent 55%),
+    radial-gradient(900px 700px at 75% 30%, rgba(255,255,255,0.04), transparent 60%),
+    linear-gradient(180deg, var(--bg0), var(--bg1)) !important;
+}
+
+/* üveg felületek – alig világosabb */
+.stage,
+.panel,
+.paperPanel,
+.card,
+.timeline,
+.dayWide,
+.paperItem,
+.carRow,
+.checkItem,
+.docItem,
+.calTask,
+.monthTile,
+.overlayCard{
+  background: rgba(255,255,255,0.035) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+/* felső sávok */
+.topbar,
+.panelHead,
+.timelineHead{
+  background: rgba(255,255,255,0.03) !important;
+}
+
+/* gombok */
+.btn,
+.tog,
+.togMini,
+.seg,
+.seg button,
+.addFab{
+  background: rgba(255,255,255,0.045) !important;
+  border-color: rgba(255,255,255,0.14) !important;
+}
+
+/* input mezők */
+input,
+textarea{
+  background: rgba(255,255,255,0.05) !important;
+  border-color: rgba(255,255,255,0.16) !important;
+}
+
+/* overlay – alig világosabb */
+.overlay{
+  background: rgba(0,0,0,0.48) !important;
+}
+
+/* =========================
+   FIX: Autók nézet – ha minden pipa megvan, maradjon zöld
+   (mert a fenti !important különben elnyomja)
+   ========================= */
+.carRow.allChecked{
+  border-color: rgba(80, 200, 120, 0.9) !important;
+  background: rgba(80, 200, 120, 0.12) !important;
+}
     
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
